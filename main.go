@@ -62,7 +62,7 @@ func getCustomerByID(c *gin.Context) {
 		if gorm.IsRecordNotFoundError(err) {
 			c.String(http.StatusNotFound, getCustomerByIdNotFoundError)
 		} else {
-			fmt.Printf("connection close error -> %v\n", err)
+			fmt.Printf("system error -> %v\n", err)
 			c.String(http.StatusForbidden, getCustomerByIdSystemError)
 		}
 	} else {
