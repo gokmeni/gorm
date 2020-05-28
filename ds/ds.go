@@ -25,9 +25,9 @@ func GetConnection() *gorm.DB {
 			panic(err)
 		}
 
-		db.DB().SetMaxIdleConns(10)
-		db.DB().SetMaxOpenConns(100)
-		db.DB().SetConnMaxLifetime(time.Minute)
+		db.DB().SetMaxIdleConns(20)
+		db.DB().SetMaxOpenConns(20)
+		db.DB().SetConnMaxLifetime(5 * time.Minute)
 
 		err = db.DB().Ping()
 
