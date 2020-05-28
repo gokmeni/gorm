@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gokmeni/gorm/ds"
 	"github.com/gokmeni/gorm/entity"
@@ -9,7 +10,7 @@ import (
 )
 
 const (
-	httpServerPort string = ":8080"
+	httpServerPort string = ":6789"
 )
 
 const (
@@ -25,9 +26,19 @@ func main() {
 
 	db = ds.GetConnection()
 
-	defer db.Close()
+	defer closeConnection(db)
+
+	closeConnection(db)
 
 	startServer()
+}
+
+func closeConnection(db *gorm.DB) {
+	err := db.Close()
+
+	if err != nil {
+		fmt.Printf("connection close error: %v\n", err)
+	}
 }
 
 func startServer() {
@@ -35,7 +46,11 @@ func startServer() {
 
 	router.GET(getCustomerByIdRoute, getCustomerByID)
 
-	router.Run(httpServerPort)
+	err := router.Run(httpServerPort)
+
+	if err != nil {
+		fmt.Printf("server could not be started -> %v\n", err)
+	}
 }
 
 func getCustomerByID(c *gin.Context) {
@@ -43,12 +58,13 @@ func getCustomerByID(c *gin.Context) {
 
 	var customer entity.Customer
 
-	err := db.Debug().Where(&entity.Customer{CustomerID: customerID}).First(&customer).Error
+	err := db.Where(&entity.Customer{CustomerID: customerID}).First(&customer).Error
 
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			c.String(http.StatusNotFound, getCustomerByIdNotFoundError)
 		} else {
+			fmt.Printf("connection close error -> %v\n", err)
 			c.String(http.StatusForbidden, getCustomerByIdSystemError)
 		}
 	} else {
