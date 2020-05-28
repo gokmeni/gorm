@@ -28,8 +28,6 @@ func main() {
 
 	defer closeConnection(db)
 
-	closeConnection(db)
-
 	startServer()
 }
 
@@ -58,7 +56,7 @@ func getCustomerByID(c *gin.Context) {
 
 	var customer entity.Customer
 
-	err := db.Where(&entity.Customer{CustomerID: customerID}).First(&customer).Error
+	err := db.Debug().Where(&entity.Customer{CustomerID: customerID}).Preload("Orders").First(&customer).Error
 
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {

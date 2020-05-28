@@ -12,6 +12,8 @@ type Customer struct {
 	Country      string `gorm:"column:country"`
 	Phone        string `gorm:"column:phone"`
 	Fax          string `gorm:"column:fax"`
+
+	Orders []Order `gorm:"foreignkey:CustomerID"`
 }
 
 func (Customer) TableName() string {
