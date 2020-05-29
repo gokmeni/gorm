@@ -56,7 +56,7 @@ func getCustomerByID(c *gin.Context) {
 
 	var customer entity.Customer
 
-	err := db.Debug().Where(&entity.Customer{CustomerID: customerID}).Preload("Orders").First(&customer).Error
+	err := db.Debug().Where(&entity.Customer{CustomerID: customerID}).Preload("Orders.OrderDetails").First(&customer).Error
 
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {

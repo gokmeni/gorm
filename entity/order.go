@@ -17,6 +17,8 @@ type Order struct {
 	ShipRegion     string    `gorm:"column:ship_region"`
 	ShipPostalCode string    `gorm:"column:ship_postal_code"`
 	ShipCountry    string    `gorm:"column:ship_country"`
+
+	OrderDetails []OrderDetail `gorm:"foreignkey:OrderID"`
 }
 
 func (Order) TableName() string {
